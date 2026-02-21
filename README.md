@@ -1,4 +1,4 @@
-# 🇮🇳 Sakhi - Ultra-Realistic Indian Mental Health Companion
+# 🇮🇳 Sakhi - Ultra-Realistic Indian Mental Health Companion By- RASHI SHARMA 
 
 **"Sakhi"** is not just a chatbot. It is a **hyper-realistic AI companion** designed to simulate the *actual* people in an Indian student's life. 
 
@@ -68,3 +68,4 @@ If you are in danger, please use the **SOS Helplines** provided in the app side 
 ---
 
 *Created to make you feel less alone.* ❤️
+
