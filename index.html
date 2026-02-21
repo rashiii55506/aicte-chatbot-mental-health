@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sakhi - Mental Health Companion</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f8ff;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 90vh;
+        }
+
+        .header {
+            background-color: #FF9933;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 10px;
+            max-width: 80%;
+            line-height: 1.4;
+        }
+
+        .user {
+            background-color: #e1f5fe;
+            align-self: flex-end;
+            color: #000000;
+        }
+
+        .bot {
+            background-color: #f1f8e9;
+            align-self: flex-start;
+            color: #000000;
+            border: 1px solid #c5e1a5;
+            font-weight: 500;
+        }
+
+        .input-area {
+            padding: 20px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 25px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 25px;
+            background-color: #FF9933;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        .typing {
+            font-size: 0.8rem;
+            color: #888;
+            margin-left: 10px;
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="chat-container">
+        <div class="header">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h1>🧘 Sakhi</h1>
+                <select id="modeSelect" onchange="changeMode()"
+                    style="padding: 5px; border-radius: 5px; border: none; font-size: 0.9rem; margin-left:10px;">
+                    <option value="friendly">🧘 Friendly</option>
+                    <option value="roast">🔥 Savage Roast</option>
+                    <option value="pamper">💖 Pamper (Sis)</option>
+                    <option value="maa">🤱 Maa (Mother)</option>
+                    <option value="papa">👨‍👧‍👦 Papa (Father)</option>
+                    <option value="partner">🥰 Loving Partner</option>
+                    <option value="teacher">📚 Teacher (Guru)</option>
+                </select>
+            </div>
+            <p style="margin: 5px 0 0 0; font-size: 0.9rem;">Your Companion (Mode: <span id="modeText">Friendly</span>)
+            </p>
+        </div>
+        <div class="chat-box" id="chatBox">
+            <div class="message bot">Namaste! I am your Safe Space. How are you feeling today?</div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div style="padding: 10px 20px; display: flex; gap: 10px; overflow-x: auto;">
+            <button onclick="sendQuickMessage('Tell me a clean, funny Indian joke 😂')"
+                style="flex: 1; min-width: 80px; background: #FFF3E0; color: #E65100; border: 1px solid #FFCC80; font-size: 0.9rem;">😂
+                Joke</button>
+            <button onclick="sendQuickMessage('Give me a calming riddle or emoji puzzle 🧩')"
+                style="flex: 1; min-width: 80px; background: #E8F5E9; color: #2E7D32; border: 1px solid #A5D6A7; font-size: 0.9rem;">🧩
+                Puzzle</button>
+            <button onclick="sendQuickMessage('Ask me a fun trivia question about India! 🏆')"
+                style="flex: 1; min-width: 80px; background: #E3F2FD; color: #1565C0; border: 1px solid #90CAF9; font-size: 0.9rem;">🏆
+                Trivia</button>
+            <button onclick="sendQuickMessage('Help me do a quick 5-4-3-2-1 Grounding exercise 🧘')"
+                style="flex: 1; min-width: 80px; background: #F3E5F5; color: #6A1B9A; border: 1px solid #CE93D8; font-size: 0.9rem;">🧘
+                Task</button>
+        </div>
+
+        <div class="typing" id="typingIndicator">Sakhi is typing...</div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="Type your message..." onkeypress="handleEnter(event)">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // ⚠️ WARNING: API KEY IS EXPOSED HERE. 
+        // This is for demonstration purely for the User's "Netlify Deployment" request.
+        const API_KEY = "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";
+
+        const chatBox = document.getElementById('chatBox');
+        const userInput = document.getElementById('userInput');
+        const typingIndicator = document.getElementById('typingIndicator');
+        const modeSelect = document.getElementById('modeSelect');
+        const modeText = document.getElementById('modeText');
+
+        // System Prompts
+        let systemPrompts = {
+            friendly: "You are 'Sakhi', a mental health companion. \n\nContext: Understand ALL struggles (Academic, Family, Love). \n\nModes: \n1. Listener: Validate feelings first. \n2. Distractor: Jokes, Puzzles. \n\nSafety: Suicide -> Tele MANAS (14416). \n\nTone: Warm, empathetic.",
+            roast: "You are 'Sakhi' (SAVAGE ROAST MODE). \n\nRules: \n- Lazy user? ROAST THEM. 'Phone fenk de!', 'Padhle bhai!'. \n- Sarcastic but motivating. \n\nSafety: Suicide -> STOP ROAST. Tele MANAS (14416).",
+            pamper: "You are 'Sakhi' (PAMPER MODE). \n\nRules: \n- Treat user like a baby. 'Aww bacha'. \n- Validate EVERYTHING. \n\nSafety: Tele MANAS (14416).",
+            maa: "You are 'Maa' (Indian Mother Persona). \n\nRules: \n- LOVE: 'Khana khaya?', 'So ja mera bacha'. \n- WORRY: 'Tu thik hai na?'. \n- BLESSINGS: 'Jug jug jiyo', 'Buri nazar na lage'. \n- If they are stressed: Comfort them with food references (Haldi doodh, Khichdi) and pure maternal warmth. \n\nSafety: Tele MANAS (14416).",
+            papa: "You are 'Papa' (Indian Father Persona). \n\nRules: \n- STRENGTH: 'Sher hai tu', 'Darna nahi'. \n- PRIDE: 'Tera baap tere saath hai'. \n- ADVICE: Practical, stoic, motivating. Use short sentences. \n\nSafety: Tele MANAS (14416).",
+            partner: "You are a 'Loving Partner' (BF/GF Persona). \n\nRules: \n- ROMANCE: 'Mera babu', 'Shona', 'Jaan'. \n- CARE: 'Khana khaya?', 'Miss you'. \n- SUPPORT: Be the biggest cheerleader. Listen to their day with love. \n\nSafety: Tele MANAS (14416).",
+            teacher: "You are a 'Teacher/Guru'. \n\nRules: \n- WISDOM: 'Beta, discipline is key'. \n- MOTIVATION: 'Failure is just a stepping stone'. \n- GUIDE: Help with time management, exam stress. Quote APJ Abdul Kalam. \n\nSafety: Tele MANAS (14416)."
+        };
+
+        // History Tracking
+        let messageHistory = [
+            { role: "system", content: systemPrompts['friendly'] },
+            { role: "assistant", content: "Namaste! I am here. How are you feeling?" }
+        ];
+
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function changeMode() {
+            const mode = modeSelect.value;
+            modeText.innerText = mode.charAt(0).toUpperCase() + mode.slice(1);
+
+            // Update System Prompt (Index 0)
+            messageHistory[0].content = systemPrompts[mode];
+
+            addMessage(`[Switched to ${mode.toUpperCase()} Mode]`, 'bot');
+        }
+
+        function sendQuickMessage(text) {
+            userInput.value = text;
+            sendMessage();
+        }
+
+        async function sendMessage() {
+            const text = userInput.value.trim();
+            if (!text) return;
+
+            addMessage(text, 'user');
+            userInput.value = '';
+            messageHistory.push({ role: "user", content: text });
+            typingIndicator.style.display = 'block';
+
+            try {
+                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${API_KEY}`
+                    },
+                    body: JSON.stringify({
+                        model: "llama-3.3-70b-versatile",
+                        messages: messageHistory,
+                        temperature: 0.7
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.error) {
+                    addMessage("Error: " + data.error.message, 'bot');
+                    return;
+                }
+
+                const reply = data.choices[0].message.content;
+                addMessage(reply, 'bot');
+                messageHistory.push({ role: "assistant", content: reply });
+
+            } catch (error) {
+                console.error(error);
+                addMessage("I'm having trouble connecting.", 'bot');
+            } finally {
+                typingIndicator.style.display = 'none';
+            }
+        }
+
+        function addMessage(text, sender) {
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.innerText = text;
+            chatBox.appendChild(div);
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+    </script>
+
+</body>
+
+</html>
