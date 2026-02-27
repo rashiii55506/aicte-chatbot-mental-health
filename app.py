@@ -3,7 +3,7 @@ from groq import Groq
 import os
 
 # --- Configuration ---
-API_KEY = "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"
+API_KEY = "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"
 
 # Configure Groq
 try:
@@ -317,5 +317,6 @@ if prompt := st.chat_input("Share your thoughts here..."):
     
     # 3. Add bot message to state
     st.session_state.messages.append({"role": "assistant", "content": bot_reply})
+
 
 
