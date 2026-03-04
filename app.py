@@ -1,13 +1,26 @@
 import streamlit as st
 from groq import Groq
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file (for local development)
+load_dotenv()
 
 # --- Configuration ---
-API_KEY = "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"
+# Fetch the API key securely from environment variables or Streamlit secrets
+API_KEY = os.environ.get("GROQ_API_KEY")
+if not API_KEY:
+    try:
+        API_KEY = st.secrets.get("GROQ_API_KEY")
+    except Exception:
+        pass
 
 # Configure Groq
 try:
-    client = Groq(api_key=API_KEY)
+    if not API_KEY:
+        st.error("GROQ_API_KEY is missing! Please set it in your environment variables or Streamlit secrets.")
+    else:
+        client = Groq(api_key=API_KEY)
 except Exception as e:
     st.error(f"Error configuring API: {e}")
 
