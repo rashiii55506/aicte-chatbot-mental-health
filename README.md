@@ -49,8 +49,8 @@ Built with **Streamlit** for a rich, interactive UI.
     ```
 
 ### Option 2: Static Website (Portable)
-Located in the `static_version/` folder.
-- **Run it**: Double-click `static_version/index.html` to open it in any browser.
+Located in the `https://aicte-chatbot-mental-health.streamlit.app/` website.
+- **Run it**: Double-click `https://aicte-chatbot-mental-health.streamlit.app/` to open it in any browser.
 
 ---
 
@@ -68,4 +68,5 @@ If you are in danger, please use the **SOS Helplines** provided in the app side 
 ---
 
 *Created to make you feel less alone.* ❤️
+
 
