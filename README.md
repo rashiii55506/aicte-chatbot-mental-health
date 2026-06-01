@@ -49,8 +49,8 @@ Built with **Streamlit** for a rich, interactive UI.
     ```
 
 ### Option 2: Static Website (Portable)
-Located in the `https://aicte-chatbot-mental-health.streamlit.app/` website.
-- **Run it**: Double-click `https://aicte-chatbot-mental-health.streamlit.app/` to open it in any browser.
+Located in the `https://skillx-rashi-team-2.streamlit.app/` website.
+- **Run it**: Double-click `https://skillx-rashi-team-2.streamlit.app/` to open it in any browser.
 
 ---
 
